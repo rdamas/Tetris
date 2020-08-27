@@ -15,6 +15,7 @@ def argb(a,r,g,b):
 class Tile(object):
 
 	shapes = {
+		" ": [ "                " ],
 		"I": [ "    IIII        ", " I   I   I   I  ", "    IIII        ", " I   I   I   I  " ],
 		"J": [ " J   JJJ        ", "  J   J  JJ     ", "     JJJ   J    ", "  JJ  J   J     " ],
 		"L": [ "  L LLL         ", "LL   L   L      ", "    LLL L       ", " L   L   LL     " ],
@@ -180,6 +181,7 @@ class Board(Screen):
 		<screen name="Tetris" position="0,0" size="1920,1080" title="Tetris" flags="wfNoBorder">
 			<widget source="canvas" render="Canvas" position="50,20" size="490,980" />
 			<widget source="preview" render="Canvas" position="600,300" size="196,196" />
+			<widget name="previewtext" position="600,230" size="1000,50" font="Regular;40" />
 			<widget name="state" position="600,20" size="500,100" font="Regular;80" foregroundColor="#00cc0000" />
 			<widget name="lines" position="600,840" size="1000,80" font="Regular;60" />
 			<widget name="level" position="600,920" size="1000,80" font="Regular;60" />
@@ -211,7 +213,8 @@ class Board(Screen):
 		
 		self["canvas"] = CanvasSource()
 		self["preview"] = CanvasSource()
-		
+
+		self["previewtext"] = Label("Nächster Block:")
 		self["key_red"] = Label()
 		self["key_green"] = Label("Spiel starten")
 		self["key_yellow"] = Label()
@@ -223,13 +226,18 @@ class Board(Screen):
 		self.onLayoutFinish.append(self.setupBoard)
 
 	def setupBoard(self):
+		self.stopped = True
 		self.board = TetrisBoard(self["canvas"])
 		self.preview = PreviewBoard(self["preview"])
 		self.tetrominos = [ "I", "J", "L", "O", "S", "T", "Z" ]
 		random.shuffle(self.tetrominos)
 		self.nexttile = self.tetrominos[0]
-		self.stopped = True
+		self.updatePreview(" ")
 	
+	def updatePreview(self, tile):
+		previewPiece = Tile(tile)
+		self.preview.drawBoard(previewPiece.shape[0])
+
 	def eventLoop(self, state):
 		self["lines"].setText("%d eliminierte Zeilen" % self.board.lines)
 		self["level"].setText("Level %d" % int(6 - self.board.timeout // 200))
@@ -238,34 +246,39 @@ class Board(Screen):
 		else:
 			tile = self.nexttile
 			piece = Tile(tile)
-			self.board.insertTile(piece, self.eventLoop)
 			random.shuffle(self.tetrominos)
 			self.nexttile = self.tetrominos[0]
-			previewPiece = Tile(self.nexttile)
-			self.preview.drawBoard(previewPiece.shape[0])
+			self.updatePreview(self.nexttile)
+			self.board.insertTile(piece, self.eventLoop)
 	
 	def gameOver(self):
-		self.stopped = True
+		self.updatePreview(" ")
 		self["state"].setText("Game Over")
+		self.stopped = True
 	
 	def cancel(self):
 		self.board.moveTimer.stop()
 		self.close()
 
 	def up(self):
-		self.board.rotateTile(1)
+		if not self.stopped:
+			self.board.rotateTile(1)
 
 	def down(self):
-		self.board.rotateTile(-1)
+		if not self.stopped:
+			self.board.rotateTile(-1)
 
 	def left(self):
-		self.board.moveTile(-1)
+		if not self.stopped:
+			self.board.moveTile(-1)
 
 	def right(self):
-		self.board.moveTile(1)
+		if not self.stopped:
+			self.board.moveTile(1)
 
 	def ok(self):
-		self.board.accelerate = True
+		if not self.stopped:
+			self.board.accelerate = not self.board.accelerate
 
 	def red(self):
 		pass
