@@ -159,12 +159,27 @@ class TetrisBoard(object):
 		self.board = self.buildLayer()
 		self.eliminateLines()
 	
+class PreviewBoard(TetrisBoard):
+
+	def __init__(self, canvas):
+		self.canvas = canvas
+		self.canvas.fill(0,0,196,196, argb(33,255,255,255))
+	
+	def drawBoard(self, piece):
+		pos = 0
+		for c in piece:
+			x = pos % 4
+			y = pos // 4
+			self.drawPiece(x, y, c)
+			pos += 1
+		self.canvas.flush()
 		
 class Board(Screen):
 
 	skin = """
 		<screen name="Tetris" position="0,0" size="1920,1080" title="Tetris" flags="wfNoBorder">
-			<widget source="Canvas" render="Canvas" position="50,20" size="490,980" />
+			<widget source="canvas" render="Canvas" position="50,20" size="490,980" />
+			<widget source="preview" render="Canvas" position="600,300" size="196,196" />
 			<widget name="state" position="600,20" size="500,100" font="Regular;80" foregroundColor="#00cc0000" />
 			<widget name="lines" position="600,840" size="1000,80" font="Regular;60" />
 			<widget name="level" position="600,920" size="1000,80" font="Regular;60" />
@@ -194,7 +209,8 @@ class Board(Screen):
 			"blue":		self.blue,
 		}, -1)
 		
-		self["Canvas"] = CanvasSource()
+		self["canvas"] = CanvasSource()
+		self["preview"] = CanvasSource()
 		
 		self["key_red"] = Label()
 		self["key_green"] = Label("Spiel starten")
@@ -207,8 +223,11 @@ class Board(Screen):
 		self.onLayoutFinish.append(self.setupBoard)
 
 	def setupBoard(self):
-		self.board = TetrisBoard(self["Canvas"])
+		self.board = TetrisBoard(self["canvas"])
+		self.preview = PreviewBoard(self["preview"])
 		self.tetrominos = [ "I", "J", "L", "O", "S", "T", "Z" ]
+		random.shuffle(self.tetrominos)
+		self.nexttile = self.tetrominos[0]
 		self.stopped = True
 	
 	def eventLoop(self, state):
@@ -217,10 +236,13 @@ class Board(Screen):
 		if not state:
 			self.gameOver()
 		else:
-			random.shuffle(self.tetrominos)
-			tile = self.tetrominos[0]
+			tile = self.nexttile
 			piece = Tile(tile)
 			self.board.insertTile(piece, self.eventLoop)
+			random.shuffle(self.tetrominos)
+			self.nexttile = self.tetrominos[0]
+			previewPiece = Tile(self.nexttile)
+			self.preview.drawBoard(previewPiece.shape[0])
 	
 	def gameOver(self):
 		self.stopped = True
