@@ -1,0 +1,19 @@
+<!-- Skin-Part fuer CerxFHD Tetris  -->
+<skin>
+	<screen name="Tetris_v0" position="0,0" size="1920,1080" title="Tetris" flags="wfNoBorder">
+		<panel name="back_top" />
+		<panel name="back_top_wide" />
+		<panel name="back_type_1920" />
+		<panel name="back_bottom_small" />
+		<panel name="part_Title" />
+		<panel name="part_buttons" />
+		<panel name="part_buttons_back" />
+		<widget source="canvas" render="Canvas" position="50,140" size="430,860" />
+		<widget source="preview" render="Canvas" position="600,300" size="196,196" />
+		<widget name="state" position="600,140" size="500,80" font="Regular;70" foregroundColor="#00cc0000" />
+		<widget name="previewtext" position="600,230" size="1000,50" font="Regular;40" />
+		<widget name="points" position="600,760" size="1000,80" font="Regular;60" />
+		<widget name="lines" position="600,840" size="1000,80" font="Regular;60" />
+		<widget name="level" position="600,920" size="1000,80" font="Regular;60" />
+	</screen>
+</skin>
