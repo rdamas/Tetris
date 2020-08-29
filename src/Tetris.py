@@ -34,7 +34,7 @@ class Tile(object):
 
 class TetrisBoard(object):
 
-	cellwidth = 49
+	cellwidth = 43
 	
 	pieceColors = {
 		" ": argb(0, 0xff, 0xff, 0xff),
@@ -51,7 +51,7 @@ class TetrisBoard(object):
 	
 	def __init__(self, canvas):
 		self.canvas = canvas
-		self.canvas.fill(0,0,490,980, argb(33,255,255,255))
+		self.canvas.fill(0,0,430,860, argb(33,255,255,255))
 		self.setupBoard()
 		self.drawBoard(self.board)
 		self.moveTimer = eTimer()
@@ -188,10 +188,10 @@ class Board(Screen):
 
 	skin = """
 		<screen name="Tetris" position="0,0" size="1920,1080" title="Tetris" flags="wfNoBorder">
-			<widget source="canvas" render="Canvas" position="50,20" size="490,980" />
+			<widget source="canvas" render="Canvas" position="50,140" size="430,860" />
 			<widget source="preview" render="Canvas" position="600,300" size="196,196" />
+			<widget name="state" position="600,140" size="500,80" font="Regular;70" foregroundColor="#00cc0000" />
 			<widget name="previewtext" position="600,230" size="1000,50" font="Regular;40" />
-			<widget name="state" position="600,20" size="500,100" font="Regular;80" foregroundColor="#00cc0000" />
 			<widget name="points" position="600,760" size="1000,80" font="Regular;60" />
 			<widget name="lines" position="600,840" size="1000,80" font="Regular;60" />
 			<widget name="level" position="600,920" size="1000,80" font="Regular;60" />
