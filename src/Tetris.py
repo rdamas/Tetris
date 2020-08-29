@@ -21,7 +21,7 @@ class Tile(object):
 		"L": [ "  L LLL         ", "LL   L   L      ", "    LLL L       ", " L   L   LL     " ],
 		"O": [ " OO  OO         ", " OO  OO         ", " OO  OO         ", " OO  OO         " ],
 		"S": [ " SS SS          ", "S   SS   S      ", " SS SS          ", "S   SS   S      " ],
-		"T": [ " TTT  T         ", " T   TT  T      ", "      T  TTT    ", "   T  TT   T    " ],
+		"T": [ " TTT  T         ", "  T   TT  T     ", "  T  TTT        ", "   T  TT   T    " ],
 		"Z": [ " ZZ   ZZ        ", "  Z  ZZ  Z      ", " ZZ   ZZ        ", "  Z  ZZ  Z      " ]
 	}
 
@@ -38,14 +38,16 @@ class TetrisBoard(object):
 	
 	pieceColors = {
 		" ": argb(0, 0xff, 0xff, 0xff),
-		"I": argb(0, 0x00, 0x00, 0xff),
-		"J": argb(0, 0xff, 0x00, 0x00),
-		"L": argb(0, 0xff, 0xd7, 0x00),
-		"O": argb(0, 0x40, 0x88, 0x40),
-		"S": argb(0, 0xff, 0x00, 0xff),
-		"T": argb(0, 0x00, 0xff, 0x00),
-		"Z": argb(0, 0xff, 0xa5, 0x00),
+		"I": argb(0, 0xf5, 0xa9, 0xd0),
+		"J": argb(0, 0xf7, 0x81, 0x81),
+		"L": argb(0, 0xf3, 0xe2, 0xa9),
+		"O": argb(0, 0xe2, 0xa9, 0xf2),
+		"S": argb(0, 0xa9, 0xf5, 0xa2),
+		"T": argb(0, 0xbc, 0xf5, 0xa9),
+		"Z": argb(0, 0xa9, 0xa9, 0xf5),
 	}
+	
+	levels = [ 1000, 800, 720, 630, 540, 470, 370, 300, 220, 150 ]
 	
 	def __init__(self, canvas):
 		self.canvas = canvas
@@ -56,8 +58,10 @@ class TetrisBoard(object):
 		self.moveTimer.callback.append(self.moveDown)
 	
 	def setupBoard(self):
-		self.timeout = 1000
 		self.lines = 0
+		self.level = 0
+		self.points = 0
+		self.timeout = self.levels[self.level]
 		self.accelerate = False
 		self.board = 		"WWWWWWWWWWWW"
 		for i in range(0,20):
@@ -84,7 +88,7 @@ class TetrisBoard(object):
 		self.canvas.fill(x,   y,   self.cellwidth,   self.cellwidth,   frameColor)
 		self.canvas.fill(x+1, y+1, self.cellwidth-2, self.cellwidth-2, color)
 	
-	def insertTile(self, tile, callback):
+	def spawn(self, tile, callback):
 		self.onDown = callback
 		self.accelerate = False
 		self.tile = tile
@@ -130,6 +134,7 @@ class TetrisBoard(object):
 			self.onDown(True)
 
 	def eliminateLines(self):
+		eliminated = 0
 		for line in range(1,21):
 			start = line * 12
 			end   = start + 12
@@ -138,8 +143,12 @@ class TetrisBoard(object):
 				tmp = "WWWWWWWWWWWWW          W" + self.board[12:start] + self.board[end:]
 				self.board = tmp
 				self.lines += 1
-				if self.lines % 5 == 0 and self.timeout > 200:
-					self.timeout = self.timeout - 200
+				eliminated += 1
+				if self.lines % 5 == 0:
+					self.level += 1
+					if len(self.levels) > self.level:
+						self.timeout = self.levels[self.level]
+		self.points += [0,100,300,500,800][eliminated] * (self.level+1)
 	
 	def buildLayer(self):
 		shape = self.tile.shape[self.tile.face]
@@ -183,6 +192,7 @@ class Board(Screen):
 			<widget source="preview" render="Canvas" position="600,300" size="196,196" />
 			<widget name="previewtext" position="600,230" size="1000,50" font="Regular;40" />
 			<widget name="state" position="600,20" size="500,100" font="Regular;80" foregroundColor="#00cc0000" />
+			<widget name="points" position="600,760" size="1000,80" font="Regular;60" />
 			<widget name="lines" position="600,840" size="1000,80" font="Regular;60" />
 			<widget name="level" position="600,920" size="1000,80" font="Regular;60" />
 			<widget name="key_red" position="225,1015" size="280,55" zPosition="1" font="Regular; 23" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#00b81c46" />
@@ -222,6 +232,7 @@ class Board(Screen):
 		self["state"] = Label()
 		self["lines"] = Label()
 		self["level"] = Label()
+		self["points"] = Label()
 
 		self.onLayoutFinish.append(self.setupBoard)
 
@@ -239,8 +250,9 @@ class Board(Screen):
 		self.preview.drawBoard(previewPiece.shape[0])
 
 	def eventLoop(self, state):
-		self["lines"].setText("%d eliminierte Zeilen" % self.board.lines)
-		self["level"].setText("Level %d" % int(6 - self.board.timeout // 200))
+		self["lines"].setText("Zeilen: %d" % self.board.lines)
+		self["level"].setText("Level: %d" % (self.board.level+1))
+		self["points"].setText("Punkte: %d" % (self.board.points))
 		if not state:
 			self.gameOver()
 		else:
@@ -249,7 +261,7 @@ class Board(Screen):
 			random.shuffle(self.tetrominos)
 			self.nexttile = self.tetrominos[0]
 			self.updatePreview(self.nexttile)
-			self.board.insertTile(piece, self.eventLoop)
+			self.board.spawn(piece, self.eventLoop)
 	
 	def gameOver(self):
 		self.updatePreview(" ")
