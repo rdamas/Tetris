@@ -1,5 +1,8 @@
 <!-- Skin-Part fuer CerxFHD Tetris  -->
 <skin>
+	<parameters>
+		<parameter name="TetrisCellwidth" value="43" />
+	</parameters>
 	<screen name="Tetris_v0" position="0,0" size="1920,1080" title="Tetris" flags="wfNoBorder">
 		<panel name="back_top" />
 		<panel name="back_top_wide" />

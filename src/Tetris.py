@@ -8,6 +8,7 @@ from Components.Sources.StaticText import StaticText
 from Screens.Screen import Screen
 
 import random
+import skin
 
 def argb(a,r,g,b):
 	return (a<<24)|(r<<16)|(g<<8)|b
@@ -34,7 +35,7 @@ class Tile(object):
 
 class TetrisBoard(object):
 
-	cellwidth = 43
+	cellwidth = int(skin.parameters.get("TetrisCellwidth", (43,))[0]) 
 	
 	pieceColors = {
 		" ": argb(0, 0xff, 0xff, 0xff),
