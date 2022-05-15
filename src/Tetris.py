@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from enigma import gFont, RT_HALIGN_CENTER, RT_VALIGN_CENTER, eTimer
+from enigma import eTimer
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.Sources.CanvasSource import CanvasSource   
@@ -9,9 +9,6 @@ from Screens.Screen import Screen
 
 import random
 import skin
-
-def argb(a,r,g,b):
-	return (a<<24)|(r<<16)|(g<<8)|b
 
 class Tile(object):
 
@@ -35,24 +32,24 @@ class Tile(object):
 
 class TetrisBoard(object):
 
-	cellwidth = int(skin.parameters.get("TetrisCellwidth", (43,))[0]) 
+	cellwidth = int(skin.parameters.get("tetris_cellwidth", (43,))[0]) 
 	
 	pieceColors = {
-		" ": argb(0, 0xff, 0xff, 0xff),
-		"I": argb(0, 0xf5, 0xa9, 0xd0),
-		"J": argb(0, 0xf7, 0x81, 0x81),
-		"L": argb(0, 0xf3, 0xe2, 0xa9),
-		"O": argb(0, 0xe2, 0xa9, 0xf2),
-		"S": argb(0, 0xa9, 0xf5, 0xa2),
-		"T": argb(0, 0xbc, 0xf5, 0xa9),
-		"Z": argb(0, 0xa9, 0xa9, 0xf5),
+		" ": skin.colorNames.get("tetris_tile_empty", "#00ffffff").argb(),
+		"I": skin.colorNames.get("tetris_tile_I",     "#00f5a9d0").argb(),
+		"J": skin.colorNames.get("tetris_tile_J",     "#00f78181").argb(),
+		"L": skin.colorNames.get("tetris_tile_L",     "#00f3e2a9").argb(),
+		"O": skin.colorNames.get("tetris_tile_O",     "#00e2a9f2").argb(),
+		"S": skin.colorNames.get("tetris_tile_S",     "#00a9f5a2").argb(),
+		"T": skin.colorNames.get("tetris_tile_T",     "#00bcf5a9").argb(),
+		"Z": skin.colorNames.get("tetris_tile_Z",     "#00a9a9f5").argb(),
 	}
 	
 	levels = [ 1000, 800, 720, 630, 540, 470, 370, 300, 220, 150 ]
 	
 	def __init__(self, canvas):
 		self.canvas = canvas
-		self.canvas.fill(0,0,430,860, argb(33,255,255,255))
+		self.canvas.fill(0,0,430,860, skin.colorNames.get("tetris_background", "#33ffffff").argb())
 		self.setupBoard()
 		self.drawBoard(self.board)
 		self.moveTimer = eTimer()
@@ -80,7 +77,7 @@ class TetrisBoard(object):
 		self.canvas.flush()
 	
 	def drawPiece(self, x, y, piece):
-		frameColor = argb(0x00, 0xd9, 0xd9, 0xc5)
+		frameColor = skin.colorNames.get("tetris_frame", "#00d9d9c5").argb()
 		color      = self.pieceColors[piece]
 			
 		x = x * self.cellwidth
@@ -174,7 +171,7 @@ class PreviewBoard(TetrisBoard):
 
 	def __init__(self, canvas):
 		self.canvas = canvas
-		self.canvas.fill(0,0,196,196, argb(33,255,255,255))
+		self.canvas.fill(0,0,196,196, skin.colorNames.get("tetris_background", "#33ffffff").argb())
 	
 	def drawBoard(self, piece):
 		pos = 0
@@ -207,7 +204,7 @@ class Board(Screen):
 		
 		self.session = session
 		Screen.__init__(self, session)
-		self.skinName = "Tetris_v0"
+		self.skinName = "Tetris_v1"
 		
 		self["actions"] =  ActionMap(["TetrisActions"], {
 			"cancel":	self.cancel,

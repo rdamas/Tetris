@@ -1,0 +1,34 @@
+<!-- Skin-Part fuer CerxHD Tetris  -->
+<skin>
+	<parameters>
+		<parameter name="tetris_cellwidth" value="43" />
+	</parameters>
+	<colors>
+		<color name="tetris_tile_empty" value="#00ffffff" />
+		<color name="tetris_tile_I"     value="#00f5a9d0" />
+		<color name="tetris_tile_J"     value="#00f78181" />
+		<color name="tetris_tile_L"     value="#00f3e2a9" />
+		<color name="tetris_tile_O"     value="#00e2a9f2" />
+		<color name="tetris_tile_S"     value="#00a9f5a2" />
+		<color name="tetris_tile_T"     value="#00bcf5a9" />
+		<color name="tetris_tile_Z"     value="#00a9a9f5" />
+		<color name="tetris_background" value="#33ffffff" />
+		<color name="tetris_frame"      value="#00d9d9c5" />
+	</colors>
+	<screen name="Tetris_v1" position="0,0" size="1280,720" title="Tetris" flags="wfNoBorder">
+		<panel name="back_top" />
+		<panel name="back_top_wide" />
+		<panel name="back_type_1920" />
+		<panel name="back_bottom_small" />
+		<panel name="part_Title" />
+		<panel name="part_buttons" />
+		<panel name="part_buttons_back" />
+		<widget source="canvas" render="Canvas" position="50,50" size="272,541" />
+		<widget source="preview" render="Canvas" position="500,200" size="110,110" />
+		<widget name="state" position="500,94" size="334,54" font="Regular;47" foregroundColor="#00cc0000" />
+		<widget name="previewtext" position="500,154" size="667,34" font="Regular;27" />
+		<widget name="points" position="500,487" size="667,54" font="Regular;40" />
+		<widget name="lines" position="500,540" size="667,54" font="Regular;40" />
+		<widget name="level" position="500,594" size="667,54" font="Regular;40" />
+	</screen>
+</skin>
