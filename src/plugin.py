@@ -2,10 +2,10 @@
 #######################################################################
 #
 #  Tetris
-#  Version 0.3
+#  Version 0.3.1
 #  Support: www.vuplus-support.org
 #
-#  Copyright (c) 2020 by Robert Damas
+#  Copyright (c) 2020-2023 by Robert Damas
 #  All rights reserved.
 #
 #  Permission to use, copy, modify, and distribute this software for any

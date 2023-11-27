@@ -35,21 +35,21 @@ class TetrisBoard(object):
 	cellwidth = int(skin.parameters.get("tetris_cellwidth", (43,))[0]) 
 	
 	pieceColors = {
-		" ": skin.colorNames.get("tetris_tile_empty", "#00ffffff").argb(),
-		"I": skin.colorNames.get("tetris_tile_I",     "#00f5a9d0").argb(),
-		"J": skin.colorNames.get("tetris_tile_J",     "#00f78181").argb(),
-		"L": skin.colorNames.get("tetris_tile_L",     "#00f3e2a9").argb(),
-		"O": skin.colorNames.get("tetris_tile_O",     "#00e2a9f2").argb(),
-		"S": skin.colorNames.get("tetris_tile_S",     "#00a9f5a2").argb(),
-		"T": skin.colorNames.get("tetris_tile_T",     "#00bcf5a9").argb(),
-		"Z": skin.colorNames.get("tetris_tile_Z",     "#00a9a9f5").argb(),
+		" ": skin.colorNames.get("tetris_tile_empty", skin.parseColor("#00ffffff")).argb(),
+		"I": skin.colorNames.get("tetris_tile_I",     skin.parseColor("#00f5a9d0")).argb(),
+		"J": skin.colorNames.get("tetris_tile_J",     skin.parseColor("#00f78181")).argb(),
+		"L": skin.colorNames.get("tetris_tile_L",     skin.parseColor("#00f3e2a9")).argb(),
+		"O": skin.colorNames.get("tetris_tile_O",     skin.parseColor("#00e2a9f2")).argb(),
+		"S": skin.colorNames.get("tetris_tile_S",     skin.parseColor("#00a9f5a2")).argb(),
+		"T": skin.colorNames.get("tetris_tile_T",     skin.parseColor("#00bcf5a9")).argb(),
+		"Z": skin.colorNames.get("tetris_tile_Z",     skin.parseColor("#00a9a9f5")).argb(),
 	}
 	
 	levels = [ 1000, 800, 720, 630, 540, 470, 370, 300, 220, 150 ]
 	
 	def __init__(self, canvas):
 		self.canvas = canvas
-		self.canvas.fill(0,0,430,860, skin.colorNames.get("tetris_background", "#33ffffff").argb())
+		self.canvas.fill(0,0,430,860, skin.colorNames.get("tetris_background", skin.parseColor("#33ffffff")).argb())
 		self.setupBoard()
 		self.drawBoard(self.board)
 		self.moveTimer = eTimer()
@@ -77,7 +77,7 @@ class TetrisBoard(object):
 		self.canvas.flush()
 	
 	def drawPiece(self, x, y, piece):
-		frameColor = skin.colorNames.get("tetris_frame", "#00d9d9c5").argb()
+		frameColor = skin.colorNames.get("tetris_frame", skin.parseColor("#00d9d9c5")).argb()
 		color      = self.pieceColors[piece]
 			
 		x = x * self.cellwidth
@@ -171,7 +171,7 @@ class PreviewBoard(TetrisBoard):
 
 	def __init__(self, canvas):
 		self.canvas = canvas
-		self.canvas.fill(0,0,196,196, skin.colorNames.get("tetris_background", "#33ffffff").argb())
+		self.canvas.fill(0,0,196,196, skin.colorNames.get("tetris_background", skin.parseColor("#33ffffff")).argb())
 	
 	def drawBoard(self, piece):
 		pos = 0

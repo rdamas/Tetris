@@ -6,8 +6,8 @@ package=$(grep Package control|cut -d " " -f 2)
 mkdir -p usr/lib/enigma2/python/Plugins/Extensions/Tetris
 cp -r ../src/* usr/lib/enigma2/python/Plugins/Extensions/Tetris
 
-tar -cvzf data.tar.gz usr
-tar -cvzf control.tar.gz control
+tar -cvzf data.tar.gz ./usr
+tar -cvzf control.tar.gz ./control
 
 [ -d ../dist ] || mkdir ../dist
 
